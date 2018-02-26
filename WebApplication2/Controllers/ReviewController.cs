@@ -8,67 +8,76 @@ using WebApplication2.Models;
 
 namespace WebApplication2.Controllers
 {
-    public class ReviewController : ApiController
+    public class ReviewController : System.Web.Mvc.Controller
     {
         // GET: api/Review
-        public IEnumerable<ReviewInfo> Get()
+        /* public IEnumerable<ReviewInfo> Get()
+         {
+             //should be using POST instead of GET to save reviews.
+             var reviewInfoList = new List<ReviewInfo>();
+             for(int i = 0; i < 10; i++)
+             {
+                 var reviewInfo = new ReviewInfo
+                 {
+                     companyName = $"companyName {i}",
+                     username = $"username {i}",
+                     review = $"review {i}",
+                     stars = i,
+                     timestamp = (Int32)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds
+                 };
+                 reviewInfoList.Add(reviewInfo);
+             }
+             return reviewInfoList;
+         }
+
+         // GET: api/Review/5
+         public ReviewInfo Get(int id)
+         {
+             return new ReviewInfo
+             {
+                 companyName = $"companyName {id}",
+                 username = $"username {id}",
+                 review = $"review {id}",
+                 stars = id,
+                 timestamp = (Int32)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds
+             };
+         }
+
+         // POST: api/Review
+         public string Post([FromBody]ReviewInfo r)
+         {
+             var reviewInfoList = new List<ReviewInfo>();
+             for (int i = 0; i < 10; i++)
+             {
+                 var reviewInfo = new ReviewInfo
+                 {
+                     companyName = $"companyName {i}",
+                     username = $"username {i}",
+                     review = $"review {i}",
+                     stars = i,
+                     timestamp = (Int32)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds
+                 };
+                 reviewInfoList.Add(reviewInfo);
+             }
+             return r.companyName;
+         }*/
+
+
+        // POST with api/Review/PostReview
+        [HttpPost]
+        public string PostReview(ReviewInfo review)
         {
-            //should be using POST instead of GET to save reviews.
-            var reviewInfoList = new List<ReviewInfo>();
-            for(int i = 0; i < 10; i++)
-            {
-                var reviewInfo = new ReviewInfo
-                {
-                    companyName = $"companyName {i}",
-                    username = $"username {i}",
-                    review = $"review {i}",
-                    stars = i,
-                    timestamp = (Int32)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds
-                };
-                reviewInfoList.Add(reviewInfo);
-            }
-            return reviewInfoList;
+            //System.Diagnostics.Debug.WriteLine(test);
+            return review.companyName;
         }
 
-        // GET: api/Review/5
-        public ReviewInfo Get(int id)
+        // GET with api/Review/GetReview/SampleCompanyName
+        [HttpGet]
+        public string GetReview(string companyName)
         {
-            return new ReviewInfo
-            {
-                companyName = $"companyName {id}",
-                username = $"username {id}",
-                review = $"review {id}",
-                stars = id,
-                timestamp = (Int32)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds
-            };
-        }
-
-        // POST: api/Review
-        public void Post([FromBody]string value)
-        {
-            var reviewInfoList = new List<ReviewInfo>();
-            for (int i = 0; i < 10; i++)
-            {
-                var reviewInfo = new ReviewInfo
-                {
-                    companyName = $"companyName {i}",
-                    username = $"username {i}",
-                    review = $"review {i}",
-                    stars = i,
-                    timestamp = (Int32)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds
-                };
-                reviewInfoList.Add(reviewInfo);
-            }
-        }
-
-        // PUT: api/Review/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/Review/5
-        public void Delete(int id)
-        {
+            Newtonsoft.Json.Linq.JObject json = Newtonsoft.Json.Linq.JObject.Parse(companyName);
+            string name = json["companyName"].ToString();
+            return name;
         }
     }
 }
