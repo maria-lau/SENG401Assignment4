@@ -1,11 +1,11 @@
-﻿using LinkShortener.Models.Debugging;
+﻿using WebApplication2.Models.Debugging;
 
 using MySql.Data.MySqlClient;
 
 using System;
 using System.Threading;
 
-namespace LinkShortener.Models.Database
+namespace WebApplication2.Models.Database
 {
     /// <summary>
     /// This class is used as a base class for the creation and deletion of a database.
@@ -20,7 +20,7 @@ namespace LinkShortener.Models.Database
         protected AbstractDatabase()
         {
             mutex = new Mutex(false);
-            connection = new MySqlConnection("SERVER=35.199.156.224;DATABASE=mysql;UID=" + UID + ";AUTO ENLIST=false;PASSWORD=" + Password);
+            connection = new MySqlConnection("SERVER=104.197.78.87;DATABASE=mysql;UID=" + UID + ";AUTO ENLIST=false;PASSWORD=" + Password);
             createDB();
         }
 
@@ -35,7 +35,7 @@ namespace LinkShortener.Models.Database
 
             if(connection == null)
             {
-                connection = new MySqlConnection("SERVER=35.199.156.224;DATABASE=mysql;UID=" + UID + ";AUTO ENLIST=false;PASSWORD=" + Password);
+                connection = new MySqlConnection("SERVER=104.197.78.87;DATABASE=mysql;UID=" + UID + ";AUTO ENLIST=false;PASSWORD=" + Password);
             }
 
             //connection.
@@ -54,7 +54,7 @@ namespace LinkShortener.Models.Database
                     {
                         Debug.consoleMsg("Database already exists.");
                         closeConnection();
-                        connection = new MySqlConnection("SERVER=35.199.156.224;DATABASE=" + databaseName + ";UID=" + UID + ";AUTO ENLIST=false;PASSWORD=" + Password);
+                        connection = new MySqlConnection("SERVER=104.197.78.87;DATABASE=" + databaseName + ";UID=" + UID + ";AUTO ENLIST=false;PASSWORD=" + Password);
                         return;
                     }
                     Debug.consoleMsg("Unable to create database"
@@ -84,7 +84,7 @@ namespace LinkShortener.Models.Database
                 }
 
                 closeConnection();
-                connection = new MySqlConnection("SERVER=35.199.156.224;DATABASE=" + databaseName + ";UID=" + UID + ";AUTO ENLIST=false;PASSWORD=" + Password);
+                connection = new MySqlConnection("SERVER=104.197.78.87;DATABASE=" + databaseName + ";UID=" + UID + ";AUTO ENLIST=false;PASSWORD=" + Password);
             }
         }
 

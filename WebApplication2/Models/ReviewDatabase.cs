@@ -6,31 +6,31 @@ using System.Linq;
 using System.Text;
 using System.Web;
 
-namespace LinkShortener.Models.Database
+namespace WebApplication2.Models.Database
 {
-    public partial class LinkDatabase : AbstractDatabase
+    public partial class ReviewDatabase : AbstractDatabase
     {
-        private LinkDatabase() { }
+        private ReviewDatabase() { }
 
-        public static LinkDatabase getInstance()
+        public static ReviewDatabase getInstance()
         {
             if(instance == null)
             {
-                instance = new LinkDatabase();
+                instance = new ReviewDatabase();
             }
             return instance;
         }
 
         /// <summary>
-        /// Gets a long URL based on the id of the short url
+        /// Gets a long string review based on the string id of the company name
         /// </summary>
-        /// <param name="id">The id of the short url</param>
+        /// <param name="companyname">The id of the short url</param>
         /// <throws type="ArgumentException">Throws an argument exception if the short url id does not refer to anything in the database</throws>
-        /// <returns>The long url the given short url refers to</returns>
-        public string getLongUrl(string id)
+        /// <returns>The review(s) from the given company name refers to</returns>
+        public string getReviews(string companyname)
         {
-            string query = @"SELECT * FROM " + dbname + ".shortenedLinks "
-                + "WHERE id=" + id + ";";
+            string query = @"SELECT * FROM " + dbname + ".companyReviews "
+                + "WHERE id=" + companyname + ";";
 
             if(openConnection() == true)
             {
@@ -47,7 +47,7 @@ namespace LinkShortener.Models.Database
                 else
                 {
                     //Throw an exception indicating no result was found
-                    throw new ArgumentException("No url in the database matches that id.");
+                    throw new ArgumentException("No company name in the database matches that name.");
                 }
             }
             else
@@ -57,29 +57,27 @@ namespace LinkShortener.Models.Database
         }
 
         /// <summary>
-        /// Saves the longURL to the database to be accessed later via the id that is returned.
+        /// Saves the review to the database to be accessed later via the companyname.
         /// </summary>
-        /// <param name="longURL">The longURL to be saved</param>
+        /// <param name="review">The review to be saved</param>
         /// <returns>The id of the url</returns>
-        public string saveLongURL(string longURL)
+        public void saveReview(string review)
         {
-            string query = @"INSERT INTO " + dbname + ".shortenedLinks(original) "
-                + @"VALUES('" + longURL + @"');";
+            string query = @"INSERT INTO " + dbname + ".companyReviews(original) "
+                + @"VALUES('" + review + @"');";
 
             if(openConnection() == true)
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.ExecuteNonQuery();
 
-                command.CommandText = "SELECT * FROM " + dbname + ".shortenedLinks WHERE id = LAST_INSERT_ID();";
+                command.CommandText = "SELECT * FROM " + dbname + ".companyReviews WHERE id = LAST_INSERT_ID();";
 
                 MySqlDataReader reader = command.ExecuteReader();
 
                 if(reader.Read() == true)
                 {
-                    string result = reader.GetInt64("id").ToString();
                     closeConnection();
-                    return result.ToString();
                 }
                 else
                 {
@@ -95,11 +93,11 @@ namespace LinkShortener.Models.Database
         }
     }
 
-    public partial class LinkDatabase : AbstractDatabase
+    public partial class ReviewDatabase : AbstractDatabase
     {
-        private static LinkDatabase instance = null;
+        private static ReviewDatabase instance = null;
 
-        private const String dbname = "linkshortenerdb ";
+        private const String dbname = "reviewdb";
         public override String databaseName { get; } = dbname;
 
         protected override Table[] tables { get; } =
@@ -108,12 +106,12 @@ namespace LinkShortener.Models.Database
             new Table
             (
                 dbname,
-                "shortenedLinks",
+                "reviews",
                 new Column[]
                 {
                     new Column
                     (
-                        "id", "INT(64)",
+                        "companyName", "VARCHAR(500)",
                         new string[]
                         {
                             "NOT NULL",
