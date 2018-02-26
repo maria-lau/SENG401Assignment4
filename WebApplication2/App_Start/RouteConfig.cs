@@ -15,9 +15,24 @@ namespace WebApplication2
 
             routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}/{id}",
+                url: "",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+
+            routes.MapRoute(
+                name: "GetReview",
+                url: "api/Review/GetReview/{companyName}",
+                defaults: new { controller = "Review", action = "GetReview", companyName=""}
+            );
+
+            routes.MapRoute(
+                name: "PostReview",
+                url: "api/Review/PostReview",
+                defaults: new { controller = "Review", action = "PostReview" }
+            );
+
+            // url: api/Company/PostReview/
+            // default: new {cotro="companCotrl", action = "postre"
         }
     }
 }
