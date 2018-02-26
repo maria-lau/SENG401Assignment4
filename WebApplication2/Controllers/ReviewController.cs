@@ -10,68 +10,24 @@ namespace WebApplication2.Controllers
 {
     public class ReviewController : System.Web.Mvc.Controller
     {
-        // GET: api/Review
-        /* public IEnumerable<ReviewInfo> Get()
-         {
-             //should be using POST instead of GET to save reviews.
-             var reviewInfoList = new List<ReviewInfo>();
-             for(int i = 0; i < 10; i++)
-             {
-                 var reviewInfo = new ReviewInfo
-                 {
-                     companyName = $"companyName {i}",
-                     username = $"username {i}",
-                     review = $"review {i}",
-                     stars = i,
-                     timestamp = (Int32)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds
-                 };
-                 reviewInfoList.Add(reviewInfo);
-             }
-             return reviewInfoList;
-         }
-
-         // GET: api/Review/5
-         public ReviewInfo Get(int id)
-         {
-             return new ReviewInfo
-             {
-                 companyName = $"companyName {id}",
-                 username = $"username {id}",
-                 review = $"review {id}",
-                 stars = id,
-                 timestamp = (Int32)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds
-             };
-         }
-
-         // POST: api/Review
-         public string Post([FromBody]ReviewInfo r)
-         {
-             var reviewInfoList = new List<ReviewInfo>();
-             for (int i = 0; i < 10; i++)
-             {
-                 var reviewInfo = new ReviewInfo
-                 {
-                     companyName = $"companyName {i}",
-                     username = $"username {i}",
-                     review = $"review {i}",
-                     stars = i,
-                     timestamp = (Int32)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds
-                 };
-                 reviewInfoList.Add(reviewInfo);
-             }
-             return r.companyName;
-         }*/
-
-
         // POST with api/Review/PostReview
-        [HttpPost]
+        // Body:
+        //  {
+        //	review: {
+        //	    "companyName":"Google",
+        //	    "username":"Google",
+        //	    "review":"Google",
+        //	    "stars":5,
+        //	    "timestamp":"time"
+        //	    }
+        //  }
+    [HttpPost]
         public string PostReview(ReviewInfo review)
         {
-            //System.Diagnostics.Debug.WriteLine(test);
             return review.companyName;
         }
 
-        // GET with api/Review/GetReview/SampleCompanyName
+        // GET with URL: api/Review/GetReview/{companyName: "Google"}
         [HttpGet]
         public string GetReview(string companyName)
         {
