@@ -75,7 +75,9 @@ namespace WebApplication2.Controllers
         [HttpGet]
         public string GetReview(string companyName)
         {
-            return companyName;
+            Newtonsoft.Json.Linq.JObject json = Newtonsoft.Json.Linq.JObject.Parse(companyName);
+            string name = json["companyName"].ToString();
+            return name;
         }
     }
 }
