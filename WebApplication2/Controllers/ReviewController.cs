@@ -21,7 +21,7 @@ namespace WebApplication2.Controllers
         //	    "timestamp":"time"
         //	    }
         //  }
-    [HttpPost]
+        [HttpPost]
         public string PostReview(ReviewInfo review)
         {
             return review.companyName;
