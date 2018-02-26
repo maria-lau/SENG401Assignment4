@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Mvc;
 using WebApplication2.Models;
 
 namespace WebApplication2.Controllers
@@ -31,17 +32,34 @@ namespace WebApplication2.Controllers
         }
 
         // GET: api/Review/5
-        public ReviewInfo Get(int id)
+        //public ReviewInfo Get(int id)
+        //{
+        //    return new ReviewInfo
+        //    {
+        //        companyName = $"companyName {id}",
+        //        username = $"username {id}",
+        //        review = $"review {id}",
+        //        stars = id,
+        //        timestamp = (Int32)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds
+        //    };
+        //}
+
+        //GET: api/Review/String
+        public void Get(String id)
         {
-            return new ReviewInfo
+
+            using (WebClient wc = new WebClient())
             {
-                companyName = $"companyName {id}",
-                username = $"username {id}",
-                review = $"review {id}",
-                stars = id,
-                timestamp = (Int32)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds
-            };
+              try
+              {
+                  var json = wc.DownloadString(id);
+              }
+              catch (Exception) { }
+            }
+
+            
         }
+
 
         // POST: api/Review
         public void Post([FromBody]string value)
