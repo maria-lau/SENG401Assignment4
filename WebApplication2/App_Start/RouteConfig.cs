@@ -30,9 +30,7 @@ namespace WebApplication2
                 url: "api/Review/PostReview",
                 defaults: new { controller = "Review", action = "PostReview" }
             );
-
-            // url: api/Company/PostReview/
-            // default: new {cotro="companCotrl", action = "postre"
+            
         }
     }
 }
