@@ -65,9 +65,10 @@ namespace WebApplication2.Controllers
 
         // POST with api/Review/PostReview
         [HttpPost]
-        public string PostReview([FromBody]string r)
+        public string PostReview(ReviewInfo review)
         {
-            return r;
+            //System.Diagnostics.Debug.WriteLine(test);
+            return review.companyName;
         }
 
         // GET with api/Review/GetReview/SampleCompanyName
