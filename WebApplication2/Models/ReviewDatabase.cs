@@ -1,10 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
-
+using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
 
 namespace WebApplication2.Models.Database
 {
@@ -22,27 +18,33 @@ namespace WebApplication2.Models.Database
         }
 
         /// <summary>
-        /// Gets a long string review based on the string id of the company name
+        /// Gets a ReviewInfo Object based on the string id of the company name
         /// </summary>
-        /// <param name="companyname">The id of the short url</param>
+        /// <param name="companyName">The id of the short url</param>
         /// <throws type="ArgumentException">Throws an argument exception if the short url id does not refer to anything in the database</throws>
         /// <returns>The review(s) from the given company name refers to</returns>
-        public string getReviews(string companyname)
+        public JObject getReviews(string companyName)
         {
             string query = @"SELECT * FROM " + dbname + ".companyReviews "
-                + "WHERE id=" + companyname + ";";
+                + "WHERE companyName=" + companyName + ";";
 
             if(openConnection() == true)
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
                 MySqlDataReader reader = command.ExecuteReader();
+                JObject reviews = null, temp = null;
 
-                if(reader.Read() == true)
+                if(reader.HasRows)
 				{
-					string originalUrl = reader.GetString("original");
+                    do
+                    {
+                        temp = (JObject)reader.GetValue(1);
+                        reviews.Merge(temp);
+                    } while (reader.Read());
+
 					reader.Close();
 					closeConnection();
-					return originalUrl;
+                    return reviews;
 				}
                 else
                 {
@@ -57,33 +59,39 @@ namespace WebApplication2.Models.Database
         }
 
         /// <summary>
-        /// Saves the review to the database to be accessed later via the companyname.
+        /// Receives a ReviewInfo object as a parameter and
+        /// Saves the review to the database with the company name as the key
         /// </summary>
         /// <param name="review">The review to be saved</param>
-        /// <returns>The id of the url</returns>
-        public void saveReview(string review)
+        /// <returns>returns a JSON object indicating if it was successful or not</returns>
+        public JObject addReview(ReviewInfo review)
         {
-            string query = @"INSERT INTO " + dbname + ".companyReviews(original) "
-                + @"VALUES('" + review + @"');";
+            string jsonstring = "{\"companyName\":\""+ review.companyName + "\",\"username\":\"" + review.username + "\",\"review\":\"" + review.review 
+                                + "\",\"stars\":" + review.stars + ",\"timestamp\":" + review.timestamp + "}";
+            JObject newReview = new JObject(jsonstring);
+            
+            string query = "INSERT INTO " + dbname + ".companyReviews(companyName, reviews) " + "VALUES (" + review.companyName + "," + newReview + ");";
 
             if(openConnection() == true)
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.ExecuteNonQuery();
 
-                command.CommandText = "SELECT * FROM " + dbname + ".companyReviews WHERE id = LAST_INSERT_ID();";
+                command.CommandText = "SELECT * FROM " + dbname + ".companyReviews WHERE companyName = LAST_INSERT_ID();";
 
                 MySqlDataReader reader = command.ExecuteReader();
 
                 if(reader.Read() == true)
                 {
+                    reader.Close();
                     closeConnection();
+                    return JObject.Parse("{\"response\":\"success\"}");
                 }
                 else
                 {
                     reader.Close();
                     closeConnection();
-                    throw new Exception("Error: LAST_INSERT_ID() did not work as intended.");
+                    return JObject.Parse("{\"response\":\"failure\"}");
                 }
             }
             else
@@ -106,22 +114,21 @@ namespace WebApplication2.Models.Database
             new Table
             (
                 dbname,
-                "reviews",
+                "companyReviews",
                 new Column[]
                 {
                     new Column
                     (
-                        "companyName", "VARCHAR(500)",
+                        "companyName", "VARCHAR(100)",
                         new string[]
                         {
                             "NOT NULL",
-                            "UNIQUE",
-                            "AUTO_INCREMENT"
-                        }, true
+                            "UNIQUE"
+                        },false 
                     ),
                     new Column
                     (
-                        "original", "VARCHAR(300)",
+                        "reviews", "JSON",
                         new string[]
                         {
                             "NOT NULL"

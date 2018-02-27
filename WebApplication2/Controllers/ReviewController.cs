@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using WebApplication2.Models;
+using WebApplication2.Models.Database;
 
 namespace WebApplication2.Controllers
 {
@@ -24,17 +26,19 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public string PostReview(ReviewInfo review)
         {
-            return review.companyName;
+            ReviewDatabase db = ReviewDatabase.getInstance();
+            JObject status = db.addReview(review);
+            return status.ToString();
         }
 
         // GET with URL: api/Review/GetReview/{companyName: "Google"}
         [HttpGet]
         public string GetReview(string companyName)
         {
-            Newtonsoft.Json.Linq.JObject json = Newtonsoft.Json.Linq.JObject.Parse(companyName);
-            string name = json["companyName"].ToString();
-            return name;
+            ReviewDatabase db = ReviewDatabase.getInstance();
+            string[] tokens = companyName.Split('"');
+            JObject reviews = db.getReviews(tokens[1]);
+            return reviews.ToString();
         }
     }
 }
- 
