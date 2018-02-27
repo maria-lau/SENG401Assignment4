@@ -26,7 +26,7 @@ namespace WebApplication2.Models.Database
         public JObject getReviews(string companyName)
         {
             string query = @"SELECT * FROM " + dbname + ".companyReviews "
-                + "WHERE companyName=" + companyName + ";";
+                + "WHERE companyName='" + companyName + "';";
 
             if(openConnection() == true)
             {
@@ -36,11 +36,18 @@ namespace WebApplication2.Models.Database
 
                 if(reader.HasRows)
 				{
-                    do
+                    while (reader.Read())
                     {
-                        temp = (JObject)reader.GetValue(1);
-                        reviews.Merge(temp);
-                    } while (reader.Read());
+                        temp = JObject.Parse(reader.GetString(2));
+                        if (reviews == null)
+                        {
+                            reviews = temp;
+                        }
+                        else
+                        {
+                            reviews.Merge(temp);
+                        }
+                    }
 
 					reader.Close();
 					closeConnection();
@@ -66,11 +73,11 @@ namespace WebApplication2.Models.Database
         /// <returns>returns a JSON object indicating if it was successful or not</returns>
         public JObject addReview(ReviewInfo review)
         {
-            string jsonstring = "{\"companyName\":\""+ review.companyName + "\",\"username\":\"" + review.username + "\",\"review\":\"" + review.review 
-                                + "\",\"stars\":" + review.stars + ",\"timestamp\":" + review.timestamp + "}";
-            JObject newReview = new JObject(jsonstring);
+            string jsonstring = "{'companyName':'"+ review.companyName + "','username':'" + review.username + "','review':'" + review.review 
+                                + "','stars':" + review.stars + ",'timestamp':" + review.timestamp + "}";
+            JObject newReview = new JObject(JObject.Parse(jsonstring));
             
-            string query = "INSERT INTO " + dbname + ".companyReviews(companyName, reviews) " + "VALUES (" + review.companyName + "," + newReview + ");";
+            string query = "INSERT INTO " + dbname + ".companyReviews(companyName, reviews) " + "VALUES ('" + review.companyName + "','" + newReview + "');";
 
             if(openConnection() == true)
             {
@@ -119,11 +126,20 @@ namespace WebApplication2.Models.Database
                 {
                     new Column
                     (
+                        "id", "INT(64)",
+                        new string[]
+                        {
+                            "NOT NULL",
+                            "UNIQUE",
+                            "AUTO_INCREMENT"
+                        }, true
+                    ),
+                    new Column
+                    (
                         "companyName", "VARCHAR(100)",
                         new string[]
                         {
                             "NOT NULL",
-                            "UNIQUE"
                         },false 
                     ),
                     new Column
