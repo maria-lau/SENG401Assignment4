@@ -22,6 +22,6 @@ namespace WebApplication2.Models
         public double stars { get; set; }
 
         [DataMember(Name = "timestamp")]
-        public Int32 timestamp { get; set; }
+        public double timestamp { get; set; }
     }
 }
