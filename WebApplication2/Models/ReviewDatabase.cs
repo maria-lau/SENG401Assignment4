@@ -23,7 +23,7 @@ namespace WebApplication2.Models.Database
         /// <param name="companyName">The id of the short url</param>
         /// <throws type="ArgumentException">Throws an argument exception if the short url id does not refer to anything in the database</throws>
         /// <returns>The review(s) from the given company name refers to</returns>
-        public JObject getReviews(string companyName)
+        public JArray getReviews(string companyName)
         {
             string query = @"SELECT * FROM " + dbname + ".companyReviews "
                 + "WHERE companyName='" + companyName + "';";
@@ -32,21 +32,15 @@ namespace WebApplication2.Models.Database
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
                 MySqlDataReader reader = command.ExecuteReader();
-                JObject reviews = null, temp = null;
+                JArray reviews = new JArray();
+                JObject temp = null;
 
                 if(reader.HasRows)
 				{
                     while (reader.Read())
                     {
                         temp = JObject.Parse(reader.GetString(2));
-                        if (reviews == null)
-                        {
-                            reviews = temp;
-                        }
-                        else
-                        {
-                            reviews.Merge(temp);
-                        }
+                        reviews.Add(temp);
                     }
 
 					reader.Close();
@@ -84,7 +78,7 @@ namespace WebApplication2.Models.Database
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.ExecuteNonQuery();
 
-                command.CommandText = "SELECT * FROM " + dbname + ".companyReviews WHERE companyName = LAST_INSERT_ID();";
+                command.CommandText = "SELECT * FROM " + dbname + ".companyReviews WHERE id = LAST_INSERT_ID();";
 
                 MySqlDataReader reader = command.ExecuteReader();
 

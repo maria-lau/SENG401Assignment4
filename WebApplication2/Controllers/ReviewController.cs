@@ -37,8 +37,13 @@ namespace WebApplication2.Controllers
         {
             ReviewDatabase db = ReviewDatabase.getInstance();
             string[] tokens = companyName.Split('"');
-            JObject reviews = db.getReviews(tokens[1]);
-            return reviews.ToString();
+            JArray reviews = db.getReviews(tokens[1]);
+            string output = "";
+            for (int i = 0; i < reviews.Count; i++)
+            {
+                output += reviews[i].ToString() + "\n";
+            }
+            return output;
         }
     }
 }
