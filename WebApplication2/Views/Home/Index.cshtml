@@ -1,4 +1,58 @@
-﻿<div class="Row">
-    <h1>TFP Review Website</h1>
-    <button id="aasd">button</button>
+﻿
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400i,900" rel="stylesheet">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<div class="w3-container w3-display-middle">
+    <h1 class="w3-animate-left">
+        <a style=color:#785ff4>T</a><a style=color:#1185f9>F</a><a style=color:#3ae2fc>P</a> Company Review Web Application
+    </h1>
+    <p><br />
+        To enter a review, please use a http POST request sent through the following URL: 146.148.104.92/API/Review/PostReview
+        <br /> In the body of the POST request, include the review in the form of a JSON object like so:
+        <br /><br /><pre>{
+        <br />      review: {
+        <br />              "companyName":"A Company Name",
+        <br />              "username":"Your Username",
+        <br />              "review":"Your Review of the Company",
+        <br />              "stars":#,  where # is between 1 - 5
+        <br />              "timestamp": The Time of Your Review
+        <br />      }
+        <br />}</pre>
+        <br />To retrieve a certain company's reviews, please use the following URL and format: 146.148.104.92/API/Review/GetReview/{companyName: "A Company Name"}
+    </p>
+    <p3><br /><br /></p3>
 </div>
+
+<style>
+
+    form {
+        font-family: 'Montserrat', sans-serif;
+        margin: 0 auto;
+    }
+
+    h1 {
+        text-align: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+    }
+
+    p2 {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    p3 {
+        position: absolute;
+        bottom: 100px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    pre {
+        display: block;
+        line-height: 10px;
+        white-space: pre;
+    }
+</style>
